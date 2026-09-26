@@ -1,0 +1,7 @@
+The general idea for this project is a planner that will allow for users to schedule events, add notes, and set timers 
+
+The Libaries being used: 
+PyQt6 - For GUI elements
+find a lib for time
+maybe find a lib for holding notes???
+
