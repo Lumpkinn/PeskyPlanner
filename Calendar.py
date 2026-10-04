@@ -1,15 +1,8 @@
 import datetime as date
-import calendar
-import json
+import csv
 
-#TODO: Also connect to GUI after you find a proper lib for it
-#TODO: make given month show up as a NUMBER. you can't make the comparison if its the name of the month.
-#TODO: Make some special mark for the day, to make it more obvious to the user
-
+today = date.datetime.now()
 CurrentDate = (date.datetime.now()).day
-CurrentYear = (date.datetime.now()).year
-CurrentMonth = (date.datetime.now()).month
-calendar.month(CurrentYear, CurrentMonth)
 #list containing events. 
 #TODO: Store list in seperate file, so data isn't lost between instances.
 events = []
@@ -19,45 +12,38 @@ events = []
 #class holding information pertaining to events.
 class Event():
      
-     #Constructor
-     def __init__(self, EventName, EventDate, EventMonth, EventYear):
+     #Constructor (needs to take a time as well)
+     def __init__(self, EventDate, EventTime, EventName):
           self.EventName = EventName
           self.EventDate = EventDate
-          self.EventMonth = EventMonth
-          self.EventYear = EventYear
+          self.EventTime = EventTime
      
      #adds the events to a array containing the rest of the events.
      def CreateEvent(self):
           #store the passed values
-          NewEvent = [self.EventName, self.EventMonth, self.EventDate, self.EventYear]
+          NewEvent = [self.EventName, self.EventDate, self.EventTime]
           events.append(NewEvent)
      
-     #check if they're equal to the current date
-     def CheckEvent(self):
-          isEvent = False
-          if int(self.EventMonth) == CurrentMonth and int(self.EventDate) == CurrentDate and int(self.EventYear) == CurrentYear:
-               isEvent = True
-          return isEvent 
-     #Function for storing data to a json file.
+
      def StoreEventData(self):
-          EventData = {"name":self.EventName, "Month":self.EventMonth, "date":self.EventDate, "year":self.EventYear}
-          with open ('Events.json', 'a', encoding="utf-8") as file:
-               file.write(",")
-               json.dump(EventData, file, indent=2)
+          #get the info from the .csv file
+          info = {"Name":self.EventName, "Date":self.EventDate, "Time":self.EventTime}
+          infoFieldNames = ["Name", "Date", "Time"]
+          with open ("Events.csv", "a") as file:
+               writer = csv.DictWriter(file, infoFieldNames)
 
-# TODO: recognize certain dates on calendar. Notably, the current date (blue), and subsequent events (random colors, excluding blue)
-today = date.datetime.now()
+               writer.writerow(info)
+               
+def getEventData(day):
+          daydict = {"Monday": [] , "Tuesday":[], "Wednesday":[], "Thursday":[], "Friday":[], "Saturday":[], "Sunday":[]}
+          with open("Events.csv", 'r') as file:
+               reader = csv.DictReader(file)
+               for row in reader:
+                    if ((row.get("Date")).lower() == day.lower()):     
+                         #have it get the info for each day, hold it in a seperate string, and return the specific string depending on the data
+                         daydict[day].append((row.get("Name"), " at ", row.get("Time")))
 
-#Testing
-#this is TEMPORARY, mostly just to take user input. Will be removed later in favor of a GUI
-
-UserEventName = input("Whats happening? ")
-UserEventYear = input("What year is it happening in? ")
-UserEventMonth = input("What month is it happening in? ")
-UserEventDay = input("What day is it happening? ")
-
-UserEvent = Event(UserEventName, UserEventDay, UserEventMonth, UserEventYear) 
-UserEvent.CreateEvent()
-UserEvent.StoreEventData()
-print(events)
-print(UserEvent.CheckEvent())
+                         #Moninfo = ("You have a " + row["Name"] + " happening at " +row.get("Time")+".")  
+                    else:
+                              info = "Nothing stored yet!"
+          return (str(daydict[day]).replace("{","").replace("}","").replace("[","").replace("]","").replace("(","").replace(")","").replace(",","").replace("'","")+"\n")
