@@ -42,8 +42,8 @@ def getEventData(day):
                     if ((row.get("Date")).lower() == day.lower()):     
                          #have it get the info for each day, hold it in a seperate string, and return the specific string depending on the data
                          daydict[day].append((row.get("Name"), " at ", row.get("Time")))
-
                          #Moninfo = ("You have a " + row["Name"] + " happening at " +row.get("Time")+".")  
                     else:
                               info = "Nothing stored yet!"
+                              return info
           return (str(daydict[day]).replace("{","").replace("}","").replace("[","").replace("]","").replace("(","").replace(")","").replace(",","").replace("'","")+"\n")

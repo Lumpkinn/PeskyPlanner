@@ -1,11 +1,14 @@
 import customtkinter as ctk
 import Calendar as cal
 import datetime as dt
+
 import random as rand
+
 #instance of calendar.py for getting and using information
 infogetter = cal
 #list of days of the week for future reference
 days = ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday","Friday"]
+
 
 #class that holds the info for each day of the week. it also holds the ctkTabview widget
 class weektabs(ctk.CTkTabview):
@@ -64,6 +67,10 @@ class popups():
           PopupText = ctk.CTkLabel(popupWindow, text= "Make sure that you're inputting the information for your events in correctly!")
           PopupText.grid(row=0, column=0, padx=20, pady=20)
           popupWindow.mainloop()
+
+
+
+
 class App(ctk.CTk):
      def __init__(self):
           #set a specific size for the window using customtkinter.set_widget_scaling(float_value) 
